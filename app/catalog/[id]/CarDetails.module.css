@@ -1,0 +1,154 @@
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  height: 512px;
+  border-radius: 18.74px;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.formCard {
+  border: 1px solid var(--color-divider);
+  padding: 32px;
+  border-radius: 14px;
+  max-width: 640px;
+}
+
+.formTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.formSubtitle {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.input {
+  width: 100%;
+  padding: 14px 18px;
+  background-color: #f7f7fb;
+  border: none;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  font-size: 14px;
+  outline: none;
+}
+
+textarea.input {
+  min-height: 100px;
+  resize: none;
+}
+
+.submitBtn {
+  display: block; /* Сделали кнопку блочным элементом */
+  margin: 10px auto 0 auto; /* auto по бокам центрирует её */
+  background-color: var(--color-primary);
+  color: white;
+  padding: 14px 50px;
+  border-radius: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submitBtn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.rightCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.headerTitle {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.idTag {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 400;
+  margin-left: 8px;
+}
+
+.meta {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.headerSpan {
+  margin-left: 16px;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 32px;
+}
+
+.description {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 68px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 14px;
+  color: #363535;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkIcon {
+  color: var(--color-primary);
+}
+.icon {
+  fill: #121417;
+  flex-shrink: 0;
+}
+
+.conditionIcon {
+  fill: #121417;
+  flex-shrink: 0;
+}

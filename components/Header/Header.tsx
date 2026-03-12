@@ -9,38 +9,29 @@ const Header = () => {
 
   return (
     <header className={css.header}>
-      <div className={css.wrapperHeader}>
-        {/* Логотип из спрайта */}
-        <Link className={css.logo} href="/">
-          <svg
-            className={css.logoIcon}
-            width="104"
-            height="16"
-            aria-hidden="true"
-          >
-            <use href="/sprite.svg#icon-icon-logo" />
-          </svg>
+      <div className={css.container}>
+        <Link href="/" className={css.logo}>
+          Rental<span className={css.logoAccent}>Car</span>
         </Link>
-
         <nav className={css.nav}>
-          <ul className={css.listHeader}>
-            <li>
-              <Link
-                href="/"
-                className={`${css.listNavItem} ${pathname === "/" ? css.active : ""}`}
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/catalog"
-                className={`${css.listNavItem} ${pathname === "/catalog" ? css.active : ""}`}
-              >
-                Catalog
-              </Link>
-            </li>
-          </ul>
+          <Link
+            href="/"
+            className={`${css.link} ${pathname === "/" ? css.active : ""}`}
+          >
+            Home
+          </Link>
+          <Link
+            href="/catalog"
+            className={`${css.link} ${pathname === "/catalog" ? css.active : ""}`}
+          >
+            Catalog
+          </Link>
+          <Link
+            href="/favorites"
+            className={`${css.link} ${pathname === "/favorites" ? css.active : ""}`}
+          >
+            Favorites
+          </Link>
         </nav>
       </div>
     </header>

@@ -1,41 +1,13 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
-import { Toaster } from "react-hot-toast";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header/Header";
 
-// Подключаем шрифт из макета
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-manrope",
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
-  ),
-  title: "RentalCar | Найди свое идеальное авто",
-  description:
-    "Надежная и бюджетная аренда автомобилей для любых поездок. Быстро, удобно и выгодно.",
-  icons: {
-    icon: "/favicon.ico",
-  },
-  openGraph: {
-    title: "RentalCar | Аренда авто",
-    description: "Платформа для легкой и удобной аренды автомобилей.",
-    url: "https://localhost:3000",
-    siteName: "RentalCar",
-    images: [
-      {
-        url: "/hero-bg.jpg", // Используем твою картинку с главной страницы
-        width: 1200,
-        height: 630,
-        alt: "RentalCar App",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
+  title: "Rental Car",
+  description: "Find your perfect rental car",
 };
 
 export default function RootLayout({
@@ -45,15 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${manrope.variable} antialiased min-h-screen flex flex-col font-sans`}
-      >
-        {/* Компонент для всплывающих уведомлений */}
-        <Toaster position="top-right" reverseOrder={false} />
-
+      <body className={inter.className}>
         <Header />
-
-        <main className="flex-grow">{children}</main>
+        {children}
       </body>
     </html>
   );

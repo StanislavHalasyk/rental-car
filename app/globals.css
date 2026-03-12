@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #101828; /* Цвет текста из макета (Dark) */
+  --color-primary: #3470ff;
+  --color-primary-hover: #0b44cd;
+  --color-text-main: #121417;
+  --color-text-secondary: rgba(18, 20, 23, 0.5);
+  --color-divider: rgba(18, 20, 23, 0.1);
 }
 
 @theme inline {
@@ -10,7 +13,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-manrope);
 
-  /* Цвета RentalCar из Figma */
   --color-primary: #3470ff;
   --color-primary-hover: #0b44cd;
   --color-dark: #101828;
@@ -19,7 +21,6 @@
   --color-gray-bg: #f7f7f7;
   --color-gray-input: #f2f4f7;
 
-  /* Базовые шрифты Next.js */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
