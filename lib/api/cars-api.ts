@@ -11,7 +11,6 @@ interface FetchCarsParams {
   make?: string;
 }
 
-// 1. Экспорт функции для списка машин
 export const fetchCars = async (
   page: number = 1,
   limit: number = 12,
@@ -41,7 +40,6 @@ export const fetchCars = async (
   }
 };
 
-// 2. ВОТ ЭТОГО НЕ ХВАТАЛО! Экспорт функции по ID
 export const fetchCarById = async (id: string): Promise<Car | null> => {
   try {
     const { data } = await instance.get<Car>(`/cars/${id}`);
@@ -52,7 +50,6 @@ export const fetchCarById = async (id: string): Promise<Car | null> => {
   }
 };
 
-// 3. Экспорт брендов
 export const fetchBrands = async (): Promise<string[]> => {
   try {
     const { data } = await instance.get<string[]>("/brands");

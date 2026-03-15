@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* 2. Добавляем manrope.variable в классы body */}
+      {}
       <body className={`${manrope.variable}`}>
         <Header />
         <main>{children}</main>

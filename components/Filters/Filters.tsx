@@ -11,6 +11,31 @@ interface FiltersProps {
   }) => void;
 }
 
+// Расширенный список брендов для полноты списка
+const ALL_BRANDS = [
+  "Aston Martin",
+  "Audi",
+  "BMW",
+  "Bentley",
+  "Buick",
+  "Chevrolet",
+  "Chrysler",
+  "Ferrari",
+  "GMC",
+  "HUMMER",
+  "Hyundai",
+  "Kia",
+  "Lamborghini",
+  "Land Rover",
+  "Mercedes-Benz",
+  "Mitsubishi",
+  "Nissan",
+  "Oldsmobile",
+  "Pontiac",
+  "Subaru",
+  "Volvo",
+].sort();
+
 export default function Filters({ onSearch }: FiltersProps) {
   const [brand, setBrand] = useState("");
   const [price, setPrice] = useState("");
@@ -22,20 +47,6 @@ export default function Filters({ onSearch }: FiltersProps) {
   const brandRef = useRef<HTMLDivElement>(null);
   const priceRef = useRef<HTMLDivElement>(null);
 
-  const brands = [
-    "Aston Martin",
-    "Audi",
-    "BMW",
-    "Bentley",
-    "Buick",
-    "Chevrolet",
-    "Chrysler",
-    "GMC",
-    "HUMMER",
-    "Hyundai",
-    "Kia",
-    "Land Rover",
-  ];
   const prices = Array.from({ length: 15 }, (_, i) => (i + 1) * 10);
 
   useEffect(() => {
@@ -63,6 +74,15 @@ export default function Filters({ onSearch }: FiltersProps) {
     });
   };
 
+  // Функция сброса
+  const handleReset = () => {
+    setBrand("");
+    setPrice("");
+    setMileageFrom("");
+    setMileageTo("");
+    onSearch({ brand: "", price: "", mileageFrom: "", mileageTo: "" });
+  };
+
   const dropdownTriggerClass =
     "flex items-center justify-between w-full h-[48px] bg-[#F7F7FB] rounded-[14px] px-[18px] text-[18px] leading-[20px] text-[#121417] outline-none cursor-pointer select-none";
   const dropdownMenuClass =
@@ -72,7 +92,7 @@ export default function Filters({ onSearch }: FiltersProps) {
 
   return (
     <div className="flex flex-wrap items-end justify-center gap-[18px] mb-12">
-      {}
+      {/* Brand Select */}
       <div className="flex flex-col gap-2 relative" ref={brandRef}>
         <label className="text-[14px] text-[#8A8A89] font-medium">
           Car brand
@@ -101,13 +121,21 @@ export default function Filters({ onSearch }: FiltersProps) {
           </svg>
         </div>
         {isBrandOpen && (
-          <div
-            className={`${dropdownMenuClass} h-[272px] overflow-y-auto scrollbar-thin`}
-          >
-            {brands.map((b) => (
+          <div className={`${dropdownMenuClass} max-h-[272px] overflow-y-auto`}>
+            {}
+            <div
+              className={dropdownOptionClass}
+              onClick={() => {
+                setBrand("");
+                setIsBrandOpen(false);
+              }}
+            >
+              All brands
+            </div>
+            {ALL_BRANDS.map((b) => (
               <div
                 key={b}
-                className={dropdownOptionClass}
+                className={`${dropdownOptionClass} ${brand === b ? "text-[#121417]" : ""}`}
                 onClick={() => {
                   setBrand(b);
                   setIsBrandOpen(false);
@@ -149,13 +177,11 @@ export default function Filters({ onSearch }: FiltersProps) {
           </svg>
         </div>
         {isPriceOpen && (
-          <div
-            className={`${dropdownMenuClass} h-[216px] overflow-y-auto scrollbar-thin`}
-          >
+          <div className={`${dropdownMenuClass} max-h-[216px] overflow-y-auto`}>
             {prices.map((p) => (
               <div
                 key={p}
-                className={dropdownOptionClass}
+                className={`${dropdownOptionClass} ${price === p.toString() ? "text-[#121417]" : ""}`}
                 onClick={() => {
                   setPrice(p.toString());
                   setIsPriceOpen(false);
@@ -200,12 +226,20 @@ export default function Filters({ onSearch }: FiltersProps) {
       </div>
 
       {}
-      <button
-        onClick={handleSearch}
-        className="w-[136px] h-[48px] bg-[#3470FF] text-white rounded-[12px] font-semibold text-[14px] leading-[20px] hover:bg-[#0B44CD] transition-colors cursor-pointer"
-      >
-        Search
-      </button>
+      <div className="flex gap-2">
+        <button
+          onClick={handleSearch}
+          className="w-[136px] h-[48px] bg-[#3470FF] text-white rounded-[12px] font-semibold text-[14px] hover:bg-[#0B44CD] transition-colors"
+        >
+          Search
+        </button>
+        <button
+          onClick={handleReset}
+          className="h-[48px] px-4 text-[#3470FF] font-medium text-[14px] hover:underline transition-all"
+        >
+          Reset
+        </button>
+      </div>
     </div>
   );
 }
