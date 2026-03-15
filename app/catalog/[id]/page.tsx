@@ -45,8 +45,6 @@ export default function CarDetailsPage() {
   const mileageFormatted = car.mileage
     ? car.mileage.toLocaleString("ru-RU")
     : "0";
-
-  // Короткий Id для красоты
   const displayId = car.id
     ? car.id.length > 8
       ? car.id.slice(-4)
@@ -58,7 +56,7 @@ export default function CarDetailsPage() {
       <div className="w-full md:w-1/2">
         <div className="relative w-full h-[450px] rounded-[20px] overflow-hidden mb-8 bg-[#F3F3F2]">
           <Image
-            src={car.img || car.photo || "/placeholder-car.png"}
+            src={car.img || (car as any).photo || "/placeholder-car.png"}
             alt={`${car.make || "Car"} ${car.model || ""}`}
             fill
             className="object-cover"
