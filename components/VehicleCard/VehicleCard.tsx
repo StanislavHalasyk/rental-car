@@ -26,8 +26,9 @@ export default function VehicleCard({ car, index = 0 }: VehicleCardProps) {
   const country = addressParts[2]?.trim() || "";
 
   const carBrand = car.make || (car as any).brand || "Car";
-
-  const mileageFormatted = car.mileage.toLocaleString("ru-RU");
+  const mileageFormatted = car.mileage
+    ? car.mileage.toLocaleString("ru-RU")
+    : "0";
 
   const Separator = () => (
     <span className="inline-block w-[1px] h-[16px] bg-[#121417]/10 mx-[6px] align-middle" />
@@ -35,7 +36,6 @@ export default function VehicleCard({ car, index = 0 }: VehicleCardProps) {
 
   return (
     <div className="relative flex flex-col w-full h-[426px] bg-white rounded-[14px] overflow-hidden group">
-      {}
       <button
         onClick={toggleFavorite}
         className="absolute top-3.5 right-3.5 z-10 p-0 bg-transparent border-none cursor-pointer active:scale-90 transition-transform"
@@ -52,35 +52,32 @@ export default function VehicleCard({ car, index = 0 }: VehicleCardProps) {
         </svg>
       </button>
 
-      {/* Фото */}
       <div className="relative w-full h-[268px] rounded-[14px] overflow-hidden bg-[#F3F3F2]">
         <Image
-          src={car.img || car.photo || "/placeholder-car.png"}
+          // Используем безопасное приведение к any для фото, чтобы не править интерфейс лишний раз
+          src={car.img || (car as any).photo || "/placeholder-car.png"}
           alt={`${carBrand} ${car.model}`}
           fill
           className="object-cover"
-          sizes="25vw"
+          sizes="(max-width: 768px) 100vw, 25vw"
           priority={index < 4}
         />
       </div>
 
       <div className="flex flex-col flex-grow pt-3.5 px-1 pb-2">
-        {}
         <div className="flex justify-between items-center mb-2 font-medium text-[16px] leading-[24px] text-[#121417]">
           <span className="truncate">
-            {carBrand} <span className="text-[#3470FF]">{car.model}</span>,{" "}
+            <span className="text-[#3470FF]">{carBrand}</span> {car.model},{" "}
             {car.year}
           </span>
           <span className="shrink-0 font-semibold text-[18px] leading-[24px]">
-            ${car.rentalPrice.replace(/\D/g, "")}
+            ${car.rentalPrice?.replace(/\D/g, "")}
           </span>
         </div>
 
-        {}
         <div className="text-[#121417]/50 text-[12px] leading-[18px] mb-7 overflow-hidden">
           <p className="truncate flex items-center mb-1">
-            {city} <Separator /> {country} <Separator /> {car.rentalCompany}{" "}
-            <Separator />
+            {city} <Separator /> {country} <Separator /> {car.rentalCompany}
           </p>
           <p className="truncate flex items-center">
             {car.type} <Separator /> {mileageFormatted} km
