@@ -14,12 +14,13 @@ export const fetchCars = async (
     const params: any = brand ? { limit: 100, make: brand } : { page, limit };
     const { data } = await instance.get<any>("/cars", { params });
 
-    if (data && data.cars) return data.cars;
-    if (Array.isArray(data)) return data;
-    return [];
+    if (data && data.cars) return data.cars as Car[];
+    if (Array.isArray(data)) return data as Car[];
+
+    return [] as Car[];
   } catch (error) {
-    console.error("Error fetching cars:", error);
-    return [];
+    console.error("API Error:", error);
+    return [] as Car[];
   }
 };
 
@@ -28,7 +29,6 @@ export const fetchBrands = async () => {
     const { data } = await instance.get<string[]>("/brands");
     return data || [];
   } catch (error) {
-    console.error("Error fetching brands:", error);
     return [];
   }
 };
@@ -38,6 +38,7 @@ export const fetchCarById = async (id: string) => {
     const { data } = await instance.get<Car>(`/cars/${id}`);
     return data;
   } catch (error) {
+    console.error("API Error (ID):", error);
     return null;
   }
 };
