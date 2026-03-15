@@ -1,18 +1,19 @@
 export interface Car {
   id: string;
-  year: number;
   make: string;
   model: string;
+  year: number;
+  rentalPrice: string;
+  address: string;
+  rentalCompany: string;
   type: string;
-  img?: string;
-  description?: string;
-  fuelConsumption?: string;
-  engineSize?: string;
+  description: string;
+  mileage: number;
   accessories: string[];
   functionalities: string[];
-  rentalPrice: string;
-  rentalCompany?: string;
-  address: string;
-  rentalConditions?: string;
-  mileage: number;
+  fuelConsumption: string;
+  engineSize: string;
+  img?: string;
+  photo?: string;
+  rentalConditions: string;
 }
