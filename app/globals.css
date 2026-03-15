@@ -8,10 +8,8 @@
   --color-divider: rgba(18, 20, 23, 0.1);
   --color-gray-label: #8d929a;
 
-  /* Цвет фона для полей ввода (селектов) */
   --bg-input: #f7f7f9;
 
-  /* Фон страницы - снова чисто белый */
   --background: #ffffff;
   --foreground: #121417;
 }
