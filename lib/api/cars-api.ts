@@ -5,40 +5,59 @@ const instance = axios.create({
   baseURL: "https://car-rental-api.goit.global",
 });
 
+interface FetchCarsParams {
+  page?: number;
+  limit?: number;
+  make?: string;
+}
+
+// 1. Экспорт функции для списка машин
 export const fetchCars = async (
   page: number = 1,
   limit: number = 12,
   brand: string = "",
-) => {
+): Promise<Car[]> => {
   try {
-    const params: any = brand ? { limit: 100, make: brand } : { page, limit };
-    const { data } = await instance.get<any>("/cars", { params });
+    const params: FetchCarsParams = brand
+      ? { limit: 100, make: brand }
+      : { page, limit };
 
-    if (data && data.cars) return data.cars as Car[];
-    if (Array.isArray(data)) return data as Car[];
+    const { data } = await instance.get<{ cars?: Car[] } | Car[]>("/cars", {
+      params,
+    });
 
-    return [] as Car[];
+    if (data && "cars" in data && Array.isArray(data.cars)) {
+      return data.cars;
+    }
+
+    if (Array.isArray(data)) {
+      return data;
+    }
+
+    return [];
   } catch (error) {
-    console.error("API Error:", error);
-    return [] as Car[];
+    console.error("API Error (fetchCars):", error);
+    return [];
   }
 };
 
-export const fetchBrands = async () => {
+// 2. ВОТ ЭТОГО НЕ ХВАТАЛО! Экспорт функции по ID
+export const fetchCarById = async (id: string): Promise<Car | null> => {
+  try {
+    const { data } = await instance.get<Car>(`/cars/${id}`);
+    return data;
+  } catch (error) {
+    console.error("API Error (fetchCarById):", error);
+    return null;
+  }
+};
+
+// 3. Экспорт брендов
+export const fetchBrands = async (): Promise<string[]> => {
   try {
     const { data } = await instance.get<string[]>("/brands");
     return data || [];
   } catch (error) {
     return [];
-  }
-};
-
-export const fetchCarById = async (id: string) => {
-  try {
-    const { data } = await instance.get<Car>(`/cars/${id}`);
-    return data;
-  } catch (error) {
-    console.error("API Error (ID):", error);
-    return null;
   }
 };

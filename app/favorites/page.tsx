@@ -24,7 +24,7 @@ export default function FavoritesPage() {
       ) : (
         <div className="text-center mt-20">
           <p className="text-gray-500 text-xl font-medium">
-            You haven't added any cars to favorites yet.
+            You haven&apos;t added any cars to favorites yet.
           </p>
         </div>
       )}

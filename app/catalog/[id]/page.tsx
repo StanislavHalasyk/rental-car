@@ -56,7 +56,11 @@ export default function CarDetailsPage() {
       <div className="w-full md:w-1/2">
         <div className="relative w-full h-[450px] rounded-[20px] overflow-hidden mb-8 bg-[#F3F3F2]">
           <Image
-            src={car.img || (car as any).photo || "/placeholder-car.png"}
+            src={
+              car.img ||
+              (car as Car & { photo?: string }).photo ||
+              "/placeholder-car.png"
+            }
             alt={`${car.make || "Car"} ${car.model || ""}`}
             fill
             className="object-cover"
