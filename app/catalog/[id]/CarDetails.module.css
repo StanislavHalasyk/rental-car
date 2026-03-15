@@ -62,8 +62,8 @@ textarea.input {
 }
 
 .submitBtn {
-  display: block; /* Сделали кнопку блочным элементом */
-  margin: 10px auto 0 auto; /* auto по бокам центрирует её */
+  display: block; 
+  margin: 10px auto 0 auto; 
   background-color: var(--color-primary);
   color: white;
   padding: 14px 50px;

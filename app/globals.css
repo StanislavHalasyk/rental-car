@@ -6,27 +6,56 @@
   --color-text-main: #121417;
   --color-text-secondary: rgba(18, 20, 23, 0.5);
   --color-divider: rgba(18, 20, 23, 0.1);
+  --color-gray-label: #8d929a;
+
+  /* Цвет фона для полей ввода (селектов) */
+  --bg-input: #f7f7f9;
+
+  /* Фон страницы - снова чисто белый */
+  --background: #ffffff;
+  --foreground: #121417;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-manrope);
-
   --color-primary: #3470ff;
   --color-primary-hover: #0b44cd;
-  --color-dark: #101828;
-  --color-gray-text: #8e929a;
-  --color-gray-light: #dadde1;
-  --color-gray-bg: #f7f7f7;
-  --color-gray-input: #f2f4f7;
-
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-manrope), "Manrope", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.filter-label {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--color-gray-label);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.filter-input {
+  font-family: var(--font-manrope), "Manrope", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--color-text-main);
+  background-color: var(--bg-input);
+  border-radius: 14px;
+  padding: 14px 18px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+::placeholder {
+  font-family: var(--font-manrope), "Manrope", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text-main);
+  opacity: 1;
 }

@@ -75,8 +75,15 @@ export default function CatalogPage() {
   const displayedCars = cars.filter((car) => {
     let isMatch = true;
 
+    if (filters.brand) {
+      const carBrand = (car.brand || car.brand || "").toLowerCase();
+      const filterBrand = filters.brand.toLowerCase();
+
+      if (carBrand !== filterBrand) isMatch = false;
+    }
+
     if (filters.price) {
-      const carPrice = parseInt(car.rentalPrice.replace("$", ""), 10);
+      const carPrice = parseInt(String(car.rentalPrice).replace(/\D/g, ""), 10);
       const filterPrice = parseInt(filters.price, 10);
       if (carPrice > filterPrice) isMatch = false;
     }
@@ -97,9 +104,9 @@ export default function CatalogPage() {
       <Filters onSearch={handleSearch} />
 
       {displayedCars.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-[32px] gap-y-[48px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[32px]">
           {displayedCars.map((car) => (
-            <VehicleCard key={`${car.id}-${Math.random()}`} car={car} />
+            <VehicleCard key={car.id} car={car} />
           ))}
         </div>
       ) : (
@@ -116,11 +123,12 @@ export default function CatalogPage() {
         </p>
       )}
 
+      {/* Кнопка с добавленным cursor-pointer */}
       {hasMore && !loading && displayedCars.length > 0 && (
-        <div className="flex justify-center mt-16">
+        <div className="flex justify-center mt-[100px] mb-10">
           <button
             onClick={handleLoadMore}
-            className="text-[var(--color-primary)] font-medium underline hover:text-[var(--color-primary-hover)] transition-colors"
+            className="px-[44px] py-[14px] text-[16px] font-medium text-[var(--color-primary)] bg-transparent border border-[var(--color-primary)] rounded-[12px] hover:bg-[var(--color-primary)] hover:text-white transition-all duration-300 cursor-pointer"
           >
             Load more
           </button>

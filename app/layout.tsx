@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import Header from "@/components/Header/Header";
 
-const inter = Inter({ subsets: ["latin"] });
+import { manrope } from "./fonts";
+import "./globals.css";
+import Header from "../components/Header/Header";
 
 export const metadata: Metadata = {
   title: "Rental Car",
-  description: "Find your perfect rental car",
+  description: "Reliable and budget-friendly rentals for any journey",
 };
 
 export default function RootLayout({
@@ -17,9 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      {/* 2. Добавляем manrope.variable в классы body */}
+      <body className={`${manrope.variable}`}>
         <Header />
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );

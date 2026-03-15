@@ -61,7 +61,7 @@ export default function CarDetailsPage() {
         <div className={css.imageWrapper}>
           <Image
             src={car.img || ""}
-            alt={`${car.make} ${car.model}`}
+            alt={`${car.brand} ${car.model}`}
             fill
             className={css.image}
           />
@@ -108,7 +108,7 @@ export default function CarDetailsPage() {
       <div className={css.rightCol}>
         <div>
           <h1 className={css.headerTitle}>
-            {car.make} {car.model}, {car.year}{" "}
+            {car.brand} {car.model}, {car.year}{" "}
             <span className={css.idTag}>Id: {shortId}</span>
           </h1>
           <div className={css.meta}>

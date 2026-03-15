@@ -11,8 +11,9 @@ const Header = () => {
     <header className={css.header}>
       <div className={css.container}>
         <Link href="/" className={css.logo}>
-          Rental<span className={css.logoAccent}>Car</span>
+          Rental<span style={{ color: "#3470ff" }}>Car</span>
         </Link>
+
         <nav className={css.nav}>
           <Link
             href="/"
@@ -25,12 +26,6 @@ const Header = () => {
             className={`${css.link} ${pathname === "/catalog" ? css.active : ""}`}
           >
             Catalog
-          </Link>
-          <Link
-            href="/favorites"
-            className={`${css.link} ${pathname === "/favorites" ? css.active : ""}`}
-          >
-            Favorites
           </Link>
         </nav>
       </div>
