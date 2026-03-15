@@ -1,135 +1,99 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Car } from "@/types/car"; // Убедись, что этот путь правильный
-import css from "./VehicleCard.module.css";
+import { useRentalStore } from "@/store/useRentalStore";
+import { Car } from "@/types/car";
 
 interface VehicleCardProps {
   car: Car;
+  index?: number;
 }
 
-const VehicleCard = ({ car }: VehicleCardProps) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const checkFavorite = () => {
-      const saved = localStorage.getItem("favorites");
-      const favorites: Car[] = saved ? JSON.parse(saved) : [];
-      const isSaved = favorites.some((fav) => fav.id === car.id);
-      setIsFavorite(isSaved);
-    };
-
-    checkFavorite();
-  }, [car.id]);
+export default function VehicleCard({ car, index = 0 }: VehicleCardProps) {
+  const { favorites, addToFavorites, removeFromFavorites } = useRentalStore();
+  const isFavorite =
+    Array.isArray(favorites) && favorites.some((fav) => fav.id === car.id);
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (typeof window === "undefined") return;
-
-    const saved = localStorage.getItem("favorites");
-    const favorites: Car[] = saved ? JSON.parse(saved) : [];
-
-    let updated: Car[];
-    if (isFavorite) {
-      updated = favorites.filter((fav) => fav.id !== car.id);
-    } else {
-      updated = [...favorites, car];
-    }
-
-    localStorage.setItem("favorites", JSON.stringify(updated));
-    setIsFavorite(!isFavorite);
+    e.stopPropagation();
+    isFavorite ? removeFromFavorites(car.id) : addToFavorites(car);
   };
 
   const addressParts = car.address?.split(",") || [];
-  const city = addressParts[addressParts.length - 2]?.trim() || "N/A";
-  const country = addressParts[addressParts.length - 1]?.trim() || "N/A";
+  const city = addressParts[1]?.trim() || "";
+  const country = addressParts[2]?.trim() || "";
 
-  const formattedPrice = car.rentalPrice?.includes("$")
-    ? car.rentalPrice
-    : `$${car.rentalPrice}`;
+  const carBrand = car.make || (car as any).brand || "Car";
 
-  const topRow = [city, country, car.rentalCompany].filter(Boolean);
-  const bottomRow = [
-    car.type,
-    car.brand, // Добавляем марку авто (Buick/Volvo) в детали
-    car.mileage.toLocaleString("en-US") + " km",
-  ].filter(Boolean);
+  const mileageFormatted = car.mileage.toLocaleString("ru-RU");
+
+  const Separator = () => (
+    <span className="inline-block w-[1px] h-[16px] bg-[#121417]/10 mx-[6px] align-middle" />
+  );
 
   return (
-    <div className={css.card}>
-      <div className={css.imageWrapper}>
-        <Image
-          src={car.img || "/placeholder-car.png"}
-          alt={`${car.brand} ${car.model}`}
-          fill
-          className={css.image}
-        />
-
-        <button
-          className={`${css.favoriteBtn} ${isFavorite ? css.active : ""}`}
-          aria-label="Add to favorite"
-          onClick={toggleFavorite}
-          type="button"
+    <div className="relative flex flex-col w-full h-[426px] bg-white rounded-[14px] overflow-hidden group">
+      {}
+      <button
+        onClick={toggleFavorite}
+        className="absolute top-3.5 right-3.5 z-10 p-0 bg-transparent border-none cursor-pointer active:scale-90 transition-transform"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill={isFavorite ? "#3470FF" : "none"}
+          stroke={isFavorite ? "#3470FF" : "white"}
+          strokeWidth="2"
         >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15.63 3.4575C15.247 3.07428 14.7922 2.77026 14.2916 2.56284C13.791 2.35542 13.2545 2.24866 12.7125 2.24866C12.1705 2.24866 11.634 2.35542 11.1334 2.56284C10.6328 2.77026 10.178 3.07428 9.795 3.4575L9 4.2525L8.205 3.4575C7.43132 2.68382 6.3817 2.24905 5.2875 2.24905C4.1933 2.24905 3.14368 2.68382 2.37 3.4575C1.59632 4.23118 1.16155 5.2808 1.16155 6.375C1.16155 7.4692 1.59632 8.51882 2.37 9.2925L3.165 10.0875L9 15.9225L14.835 10.0875L15.63 9.2925C16.0132 8.90951 16.3172 8.45474 16.5247 7.95414C16.7321 7.45354 16.8389 6.91701 16.8389 6.375C16.8389 5.83299 16.7321 5.29646 16.5247 4.79586C16.3172 4.29526 16.0132 3.84049 15.63 3.4575V3.4575Z"
-              stroke={isFavorite ? "#3470FF" : "white"}
-              fill={isFavorite ? "#3470FF" : "none"}
-              strokeOpacity={isFavorite ? "1" : "0.8"}
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+        </svg>
+      </button>
+
+      {/* Фото */}
+      <div className="relative w-full h-[268px] rounded-[14px] overflow-hidden bg-[#F3F3F2]">
+        <Image
+          src={car.img || car.photo || "/placeholder-car.png"}
+          alt={`${carBrand} ${car.model}`}
+          fill
+          className="object-cover"
+          sizes="25vw"
+          priority={index < 4}
+        />
       </div>
 
-      <div className={css.info}>
-        <div className={css.titleRow}>
-          <h3 className={css.title}>
-            {/* Название бренда черным */}
-            <span>{car.brand} </span>
-            {/* Модель синим цветом */}
-            <span className={css.accent}>{car.model}</span>,{/* Год черным */}
-            <span> {car.year}</span>
-          </h3>
-          <span className={css.price}>{formattedPrice}</span>
+      <div className="flex flex-col flex-grow pt-3.5 px-1 pb-2">
+        {}
+        <div className="flex justify-between items-center mb-2 font-medium text-[16px] leading-[24px] text-[#121417]">
+          <span className="truncate">
+            {carBrand} <span className="text-[#3470FF]">{car.model}</span>,{" "}
+            {car.year}
+          </span>
+          <span className="shrink-0 font-semibold text-[18px] leading-[24px]">
+            ${car.rentalPrice.replace(/\D/g, "")}
+          </span>
         </div>
 
-        <div className={css.details}>
-          <div className={css.tagLine}>
-            {topRow.map((tag, i) => (
-              <span key={`top-${i}`} className={css.tagItem}>
-                {tag}
-              </span>
-            ))}
-          </div>
-          <div className={css.tagLine}>
-            {bottomRow.map((tag, i) => (
-              <span key={`bottom-${i}`} className={css.tagItem}>
-                {tag}
-              </span>
-            ))}
-          </div>
+        {}
+        <div className="text-[#121417]/50 text-[12px] leading-[18px] mb-7 overflow-hidden">
+          <p className="truncate flex items-center mb-1">
+            {city} <Separator /> {country} <Separator /> {car.rentalCompany}{" "}
+            <Separator />
+          </p>
+          <p className="truncate flex items-center">
+            {car.type} <Separator /> {mileageFormatted} km
+          </p>
         </div>
 
-        <Link href={`/catalog/${car.id}`} className={css.learnMoreBtn}>
-          Read more
+        <Link
+          href={`/catalog/${car.id}`}
+          className="mt-auto w-full py-3 bg-[#3470FF] text-white rounded-[12px] font-semibold text-[14px] hover:bg-[#0B44CD] transition-colors cursor-pointer text-center no-underline"
+        >
+          Learn more
         </Link>
       </div>
     </div>
   );
-};
-
-export default VehicleCard;
+}

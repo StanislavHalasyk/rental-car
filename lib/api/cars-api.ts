@@ -8,21 +8,36 @@ const instance = axios.create({
 export const fetchCars = async (
   page: number = 1,
   limit: number = 12,
-  brand?: string,
-): Promise<Car[]> => {
-  const { data } = await instance.get("/cars", {
-    params: {
-      page,
-      limit,
+  brand: string = "",
+) => {
+  try {
+    const params: any = brand ? { limit: 100, make: brand } : { page, limit };
+    const { data } = await instance.get<any>("/cars", { params });
 
-      ...(brand ? { make: brand } : {}),
-    },
-  });
-
-  return Array.isArray(data) ? data : data.cars || [];
+    if (data && data.cars) return data.cars;
+    if (Array.isArray(data)) return data;
+    return [];
+  } catch (error) {
+    console.error("Error fetching cars:", error);
+    return [];
+  }
 };
 
-export const fetchCarById = async (id: string): Promise<Car> => {
-  const { data } = await instance.get<Car>(`/cars/${id}`);
-  return data;
+export const fetchBrands = async () => {
+  try {
+    const { data } = await instance.get<string[]>("/brands");
+    return data || [];
+  } catch (error) {
+    console.error("Error fetching brands:", error);
+    return [];
+  }
+};
+
+export const fetchCarById = async (id: string) => {
+  try {
+    const { data } = await instance.get<Car>(`/cars/${id}`);
+    return data;
+  } catch (error) {
+    return null;
+  }
 };

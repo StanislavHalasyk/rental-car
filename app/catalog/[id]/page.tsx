@@ -1,195 +1,183 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { fetchCarById } from "@/lib/api/cars-api";
 import { Car } from "@/types/car";
-import css from "./CarDetails.module.css";
 
 export default function CarDetailsPage() {
-  const params = useParams();
+  const { id } = useParams();
   const [car, setCar] = useState<Car | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  // Состояние для инпута даты
-  const [dateInputType, setDateInputType] = useState("text");
 
   useEffect(() => {
-    if (params?.id) {
-      fetchCarById(params.id as string)
-        .then((data) => setCar(data))
-        .catch((err) => console.error("Error fetching car:", err))
-        .finally(() => setLoading(false));
-    }
-  }, [params?.id]);
+    if (id) fetchCarById(id as string).then(setCar);
+  }, [id]);
 
-  if (loading)
+  if (!car)
     return (
-      <p className="text-center mt-20 text-xl text-[var(--color-primary)] animate-pulse">
-        Loading car details...
-      </p>
+      <div className="p-20 text-center text-[#121417] text-xl font-medium">
+        Loading...
+      </div>
     );
-  if (!car) return <p className="text-center mt-20 text-xl">Car not found.</p>;
-
-  let conditions: string[] = [];
-  if (typeof car.rentalConditions === "string") {
-    conditions = car.rentalConditions.includes("\n")
-      ? car.rentalConditions.split("\n")
-      : car.rentalConditions.split(",").map((c) => c.trim());
-  } else if (Array.isArray(car.rentalConditions)) {
-    conditions = car.rentalConditions;
-  }
 
   const addressParts = car.address?.split(",") || [];
-  const city = addressParts[addressParts.length - 2]?.trim() || "N/A";
-  const country = addressParts[addressParts.length - 1]?.trim() || "N/A";
+  const city = addressParts[1]?.trim() || "";
+  const country = addressParts[2]?.trim() || "";
+  const conditions =
+    typeof car.rentalConditions === "string"
+      ? car.rentalConditions.split("\n")
+      : [];
 
-  const formattedPrice = car.rentalPrice?.includes("$")
-    ? car.rentalPrice
-    : `$${car.rentalPrice || ""}`;
+  const mileageFormatted = car.mileage.toLocaleString("ru-RU");
 
-  const formattedMileage = car.mileage
-    ?.toLocaleString("en-US")
-    .replace(/,/g, " ");
-  const shortId = car.id ? String(car.id).slice(0, 4) : "";
+  const shortId = car.id.length > 8 ? car.id.slice(-4) : car.id;
 
   return (
-    <section className={css.container}>
-      {/* ЛЕВАЯ КОЛОНКА */}
-      <div className={css.leftCol}>
-        <div className={css.imageWrapper}>
+    <div className="max-w-[1440px] mx-auto px-8 py-10 flex flex-col md:flex-row gap-16">
+      <div className="w-full md:w-1/2">
+        <div className="relative w-full h-[450px] rounded-[20px] overflow-hidden mb-8 bg-[#F3F3F2]">
           <Image
-            src={car.img || ""}
-            alt={`${car.brand} ${car.model}`}
+            src={car.img || car.photo || "/placeholder-car.png"}
+            alt={`${car.make} ${car.model}`}
             fill
-            className={css.image}
+            className="object-cover"
+            priority
           />
         </div>
 
-        <div className={css.formCard}>
-          <h3 className={css.formTitle}>Book your car now</h3>
-          <p className={css.formSubtitle}>
+        <div className="bg-white border border-[#121417]/5 rounded-[20px] p-10 shadow-sm">
+          <h3 className="text-[20px] font-semibold mb-2">Book your car now</h3>
+          <p className="text-[#121417]/50 mb-6 text-[14px]">
             Stay connected! We are always ready to help you.
           </p>
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col gap-4">
             <input
               type="text"
               placeholder="Name*"
-              className={css.input}
+              className="w-full h-[56px] bg-[#F7F7FB] rounded-[12px] px-4 outline-none"
               required
             />
             <input
               type="email"
               placeholder="Email*"
-              className={css.input}
+              className="w-full h-[56px] bg-[#F7F7FB] rounded-[12px] px-4 outline-none"
               required
             />
-            {/* Инпут даты с переключением типа */}
             <input
-              type={dateInputType}
+              type="text"
               placeholder="Booking date"
-              className={css.input}
-              onFocus={() => setDateInputType("date")}
-              onBlur={(e) => {
-                if (!e.target.value) setDateInputType("text");
-              }}
-              required
+              className="w-full h-[56px] bg-[#F7F7FB] rounded-[12px] px-4 outline-none"
             />
-            <textarea placeholder="Comment" className={css.input}></textarea>
-            <button type="submit" className={css.submitBtn}>
+            <textarea
+              placeholder="Comment"
+              className="w-full h-[120px] bg-[#F7F7FB] rounded-[12px] p-4 outline-none resize-none"
+            />
+            <button
+              type="submit"
+              className="w-[160px] h-[48px] bg-[#3470FF] text-white rounded-[12px] font-semibold hover:bg-[#0B44CD] cursor-pointer mt-4 transition-colors"
+            >
               Send
             </button>
           </form>
         </div>
       </div>
 
-      {/* ПРАВАЯ КОЛОНКА */}
-      <div className={css.rightCol}>
-        <div>
-          <h1 className={css.headerTitle}>
-            {car.brand} {car.model}, {car.year}{" "}
-            <span className={css.idTag}>Id: {shortId}</span>
-          </h1>
-          <div className={css.meta}>
-            <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <svg className={css.icon} width="16" height="16">
-                <use href="/sprite.svg#icon-icon-location" />
-              </svg>
-              {city}, {country}
+      <div className="w-full md:w-1/2">
+        <div className="mb-8 relative">
+          <div className="flex justify-between items-start mb-2">
+            <h1 className="text-[32px] font-semibold text-[#121417]">
+              <span className="text-[#3470FF]">{car.make}</span> {car.model},{" "}
+              {car.year}
+            </h1>
+            {}
+            <span className="text-[#121417]/20 text-[14px] mt-4 font-light">
+              Id: {shortId}
             </span>
-            <span className={css.headerSpan}>
-              Mileage: {formattedMileage} km
+          </div>
+          <p className="text-[#121417]/50 mb-4 flex gap-4 text-[14px] items-center">
+            <span>
+              📍 {city}, {country}
             </span>
+            <span className="w-[1px] h-[16px] bg-[#121417]/10" />
+            <span>Mileage: {mileageFormatted} km</span>
+          </p>
+          <p className="text-[32px] font-bold text-[#121417] mb-6">
+            ${car.rentalPrice.replace(/\D/g, "")}
+          </p>
+          <p className="text-[16px] leading-[24px] text-[#121417] font-light">
+            {car.description}
+          </p>
+        </div>
+
+        {}
+        <div className="mb-8">
+          <h3 className="text-[18px] font-semibold mb-4 text-[#121417]">
+            Rental Conditions:
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {conditions.map((c, i) => {
+              const parts = c.split(/(\d+)/);
+              return (
+                <div
+                  key={i}
+                  className="bg-[#F9F9F9] px-3 py-1.5 rounded-[35px] text-[12px] text-[#363535]"
+                >
+                  {parts.map((p, j) =>
+                    /\d+/.test(p) ? (
+                      <span key={j} className="text-[#3470FF] font-semibold">
+                        {p}
+                      </span>
+                    ) : (
+                      p
+                    ),
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        <div className={css.price}>{formattedPrice}</div>
-
-        <p className={css.description}>{car.description}</p>
-
-        {conditions.length > 0 && (
-          <div style={{ marginBottom: "110px" }}>
-            <h4 className={css.sectionTitle}>Rental Conditions:</h4>
-            <div className={css.list}>
-              {conditions.map((cond, i) => (
-                <div key={i} className={css.listItem}>
-                  <svg className={css.conditionIcon} width="16" height="16">
-                    <use href="/sprite.svg#icon-icon-check" />
-                  </svg>
-                  {cond}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div style={{ marginBottom: "110px" }}>
-          <h4 className={css.sectionTitle}>Car Specifications:</h4>
-          <div className={css.list}>
-            <div className={css.listItem}>
-              <svg className={css.icon} width="16" height="16">
-                <use href="/sprite.svg#icon-icon-calendar" />
-              </svg>
-              Year: {car.year}
-            </div>
-            <div className={css.listItem}>
-              <svg className={css.icon} width="16" height="16">
-                <use href="/sprite.svg#icon-icon-car" />
-              </svg>
-              Type: {car.type}
-            </div>
-            <div className={css.listItem}>
-              <svg className={css.icon} width="16" height="16">
-                <use href="/sprite.svg#icon-icon-fuel" />
-              </svg>
-              Fuel Consumption: {car.fuelConsumption}
-            </div>
-            <div className={css.listItem}>
-              <svg className={css.icon} width="16" height="16">
-                <use href="/sprite.svg#icon-icon-settings" />
-              </svg>
-              Engine Size: {car.engineSize}
-            </div>
+        {}
+        <div className="mb-8">
+          <h3 className="text-[18px] font-semibold mb-4 text-[#121417]">
+            Car Specifications:
+          </h3>
+          <div className="grid grid-cols-1 gap-4 text-[#121417] text-[14px]">
+            <p className="flex items-center gap-2">
+              📅 Year: <span className="font-medium">{car.year}</span>
+            </p>
+            <p className="flex items-center gap-2">
+              🚗 Type: <span className="font-medium">{car.type}</span>
+            </p>
+            <p className="flex items-center gap-2">
+              ⛽ Fuel Consumption:{" "}
+              <span className="font-medium">{car.fuelConsumption}</span>
+            </p>
+            <p className="flex items-center gap-2">
+              ⚙️ Engine Size:{" "}
+              <span className="font-medium">{car.engineSize}</span>
+            </p>
           </div>
         </div>
 
+        {}
         <div>
-          <h4 className={css.sectionTitle}>Accessories and functionalities:</h4>
-          <div className={css.list}>
-            {[...(car.accessories || []), ...(car.functionalities || [])].map(
-              (item, i) => (
-                <div key={i} className={css.listItem}>
-                  <svg className={css.conditionIcon} width="16" height="16">
-                    <use href="/sprite.svg#icon-icon-check" />
-                  </svg>
-                  {item}
-                </div>
-              ),
-            )}
+          <h3 className="text-[18px] font-semibold mb-4 text-[#121417]">
+            Accessories and functionalities:
+          </h3>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-[#121417]/50 text-[12px]">
+            {[...car.accessories, ...car.functionalities].map((item, i) => (
+              <span key={i}>
+                {item}{" "}
+                {i !==
+                  car.accessories.length + car.functionalities.length - 1 &&
+                  "|"}
+              </span>
+            ))}
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

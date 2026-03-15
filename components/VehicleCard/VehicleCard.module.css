@@ -100,7 +100,6 @@
   line-height: 18px;
 }
 
-/* 1. Показываем палочку после ВСЕХ тегов */
 .tagItem::after {
   content: "";
   display: block;
@@ -110,7 +109,6 @@
   margin: 0 6px;
 }
 
-/* 2. Прячем палочку ТОЛЬКО у самого последнего тега на нижней строке */
 .tagLine:last-child .tagItem:last-child::after {
   display: none;
 }
